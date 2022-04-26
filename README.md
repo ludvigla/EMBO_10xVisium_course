@@ -1,1 +1,1 @@
-[website](https://github.com/ludvigla/EMBO_10xVisium_course)
+[course website](https://ludvigla.github.io/EMBO_10xVisium_course/)
