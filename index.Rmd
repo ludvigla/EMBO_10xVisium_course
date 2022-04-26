@@ -1,0 +1,30 @@
+---
+title: "Analysis of MOB Visium data using STutility"
+author: "Authors: Lovisa Franzén, Ludvig Larsson, Mengxiao He"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+description: ""
+---
+
+# Introduction
+
+Hello! Today we will have a closer look at two 10x Genomics Visium Gene Expression data sets generated from mouse olfactory bulb (MOB) tissue. We will go through how a general workflow can look like when processing, analyzing, and visualzing the data. The R package that we will use for this is [STutility](https://ludvigla.github.io/STUtility_web_site/index.html)^1^, a tool built upon [Seurat](https://satijalab.org/seurat/)^2^, that is specialized at handling spatial transcriptomics (ST) and Visium data.  
+
+<br>
+
+References:
+
+<font size="2">
+1. Bergenstråhle J, Larsson L, Lundeberg J. Seamless integration of image and molecular analysis for spatial transcriptomics workflows. BMC Genomics. 2020 Jul 14;21(1):482. doi: 10.1186/s12864-020-06832-3. PMID: 32664861; PMCID: PMC7386244.  
+</font>
+  
+<font size="2">
+2. Stuart T, Butler A, Hoffman P, Hafemeister C, Papalexi E, Mauck WM 3rd, Hao Y, Stoeckius M, Smibert P, Satija R. Comprehensive Integration of Single-Cell Data. Cell. 2019 Jun 13;177(7):1888-1902.e21. doi: 10.1016/j.cell.2019.05.031. Epub 2019 Jun 6. PMID: 31178118; PMCID: PMC6687398.  
+</font>
+
+
+![](../imgs/logo_kth.png){height=50px, width=50px} . 
+![](../imgs/logo_scilifelab.png){height=50px} . 
+![](../imgs/logo_spatial-research.png){height=50px} . 
+![](../imgs/logo_embo.png){height=50px} . 

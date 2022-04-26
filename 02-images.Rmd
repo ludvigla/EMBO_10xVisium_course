@@ -1,0 +1,70 @@
+# H&E images
+
+The H&E image is an integral part of the 10x Visium data set. It provides high resolution detail about tissue morphology and serves as a useful guide to explore and validate findings and can even provide additional information to be integrated with gene expression data.
+
+## Load images
+  
+With the Seurat object created, we are ready to load the H&E images from the file paths provided in the `infoTable`. The `LoadImages()` function allow you to load the images into the Seurat object and will automatically save a scaled down version of each image that you can use for plotting.
+
+```{r}
+se <- LoadImages(se, time.resolve = FALSE, verbose = TRUE)
+```
+
+```{r fig.width=12, fig.height=6, fig.cap="Raw H&E images", dpi=150}
+ImagePlot(se, method = "raster", type = "raw", annotate = FALSE)
+```
+
+## Mask images
+
+Next, we can apply a mask to our H&E images to remove the background. Note that the masking procedure relies on sharp contrasts in the H&E image and will therefore perform poorly on images with diffuse borders in which case the masking strategy needs to be adjusted or done manually.
+
+```{r fig.width=12, fig.height=6, fig.cap="Masked H&E images", dpi=150}
+
+se <- MaskImages(object = se)
+ImagePlot(se, method = "raster", type = "masked", annotate = FALSE)
+
+```
+  
+## Process images
+  
+As you can see, the two sections are placed in different orientations on the capture area. Let's take care of that.
+
+STUtility provide 3 different methods to adjust the H&E images:
+* `WarpImages` : Apply predefined rigid transformations such as rotation, translation and reflection
+* `AlignImages` : An automatic image registration method that relies on edge detection. This method is sensitive to deformations and other tissue artefacts. 
+* `ManualALignImages` : Opens up an interactive shiny web application where rigid transformations such as rotations, translations and reflections can be applied to the data.
+
+Below, we'll flip the first section -90deg and apply a translation along the y axis:
+
+
+```{r fig.width=12, fig.height=6, fig.cap="Processed H&E images", dpi=150}
+
+#' Lets rotate the first section 90 degrees to match the second section
+transforms <- list("1" = list("angle" = -90, "shift.y" = -60))
+se <- WarpImages(se, transforms)
+
+ImagePlot(se, method = "raster", annotate = FALSE)
+```
+Now that we have the two tissue sections aligned, it will be much easier to compare expression patterns between them.
+
+We can now also plot gene expression values on top of the H&E images.  
+
+```{r fig.width=12, fig.height=6, fig.cap="Spatial distribution of Nrgn", dpi=150}
+
+col_scale <- c("darkblue", "cyan", "yellow", "red", "darkred")
+FeatureOverlay(se, 
+               features = "Nrgn", 
+               sampleids = 1:2, 
+               ncols = 2, 
+               pt.size = 1.5, 
+               max.cutoff = "q99",
+               cols = col_scale, 
+               add.alpha = TRUE,
+               label.by = "slide_id",
+               type = "processed")
+
+```
+
+For the marker gene Nrgn, we can see that the gene is specifically expressed in one region of the MOB, although the counts are much higher in the first section due to the overall higher quality of the data set.
+
+Before we move on with downstream normalization and filtering, let's spend a few minutes on quality control and filtering.

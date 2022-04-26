@@ -1,0 +1,118 @@
+# Set up
+
+First, we need to install and/or load the necessary packages and import the Visium data. To install `STutility`, follow the guide provided in the vignette: https://ludvigla.github.io/STUtility_web_site/Installation.html  
+
+```{r include=FALSE}
+knitr::opts_chunk$set(
+	echo = T,
+	message = F,
+	warning = F,
+	cache = T,
+	cache.lazy = F
+)
+```
+
+
+When loading `STutility`, it automatically imports the packages `Seurat` and `ggplot2`. 
+
+```{r warning=FALSE, message=FALSE}
+
+library(STutility)
+library(DT)
+
+```
+
+Next, we need to prepare the input files and how to import the data into R. 10X Visium data output is produced with the spaceranger command line tool from raw fastq files. The output includes a number of files, and the ones that needs to be imported into R for STutility are the following:
+
+
+* `filtered_feature_bc_matrix.h5` or `raw_feature_bc_matrix.h5` --- Gene expression matrices in .h5 format containing the raw UMI counts for each spot and each gene. The “filtered_feature_bc_matrix.h5” matrix contains spots that are localized under the tissue while the “raw_feature_bc_matrix.h5” matrix contain all spots from the entire capture area. *NOTE: if you want to include spots outside of the tissue, you need to set disable.subset = TRUE when running InputFromTable.*  
+
+* `tissue_positions_list.csv` --- contains capture-spot barcodes and corresponding capture-spot coordinates.  
+
+* `tissue_hires_image.png` --- H&E image in PNG format with a width of 2000 pixels.  
+
+* `scalefactors_json.json` --- This file contains scaling factors subject to the H&E images of different resolutions. E.g. “tissue_hires_scalef”: 0.1, means that the pixel coordinates in the “tissue_positions_list.csv” table should be scaled by a factor of 0.1 to match the size of the “hires_image.png” file.  
+  
+  
+The recommended method to read the files into R is via the creation of a `data.frame` that we will call the `infoTable`. There are four columns in this table that are required for Visium data: `samples`, `spotfiles`, `imgs` and `json`. These columns specify the paths to the required input files.  
+
+Any number of extra columns can be added to the `infoTable` data frame that you want to include as meta data in your Seurat object, e.g. “gender”, “age”, “slide_id” etc.   
+
+<br><br>
+
+## Assemble input files
+
+Now let's create the `infoTable` and add a bit more information about the samples!  
+With these samples, we know that one MOB is of higher quality than the other, so let's add that information and we might be able to check later how that influences the data. We'll also add the slide and capture area identifiers to the meta data - that's always useful information to keep!  
+
+
+```{r}
+infoTable <- data.frame(samples = c(file.path("../data", "V19D02-087_B1", "filtered_feature_bc_matrix.h5"),
+                                    file.path("../data", "V19T26-013_A1", "filtered_feature_bc_matrix.h5")),
+                        spotfiles = c(file.path("../data", "V19D02-087_B1", "spatial", "tissue_positions_list.csv"),
+                                    file.path("../data", "V19T26-013_A1", "spatial","tissue_positions_list.csv")),
+                        imgs = c(file.path("../data", "V19D02-087_B1", "spatial", "tissue_hires_image.png"),
+                                    file.path("../data", "V19T26-013_A1", "spatial","tissue_hires_image.png")),
+                        json = c(file.path("../data", "V19D02-087_B1", "spatial", "scalefactors_json.json"),
+                                    file.path("../data", "V19T26-013_A1", "spatial","scalefactors_json.json")),
+                        slide_id = c("V19D02-087_B1", "V19T26-013_A1"),
+                        batch = c("A", "B"),
+                        quality = c("high", "low"),
+                        tissue = c("MOB", "MOB")
+                        )
+
+datatable(infoTable, rownames = F, caption = paste("Our infoTable with added sample information"))
+```
+<br><br>
+
+  
+## Import data
+
+It's time to import the data into R using the function `InputFromTable` and providing our `infoTable` to point at where the data is located. In addition, we can perform some initial quality filtering of the data, for instance removing spots and genes with very low UMI counts.  
+
+
+```{r message=TRUE}
+
+se <- InputFromTable(infotable = infoTable, 
+                     minSpotsPerGene = 5,
+                     minUMICountsPerGene = 100,
+                     minUMICountsPerSpot = 500,
+                     platform =  "Visium", 
+                     verbose = T)
+
+```
+
+<br>
+
+To check everything looks ok, we can do a few plots of the data.
+
+```{r fig.width=11, fig.height=6, out.width="100%", fig.cap="Violin plot of unique genes and UMIs."}
+
+col_samples <- c("#1954A6", "#A7C947")
+VlnPlot(se, features = c("nFeature_RNA", "nCount_RNA"), group.by = "slide_id", cols = col_samples)
+
+```
+
+```{r fig.width=11, fig.height=6, out.width="100%", fig.cap="Spatial distribution of unique genes and UMIs."}
+
+col_scale <- c("darkblue", "cyan", "yellow", "red", "darkred")
+ST.FeaturePlot(se, features = c("nFeature_RNA"), cols = col_scale, ncol = 2, pt.size = 1.8, label.by = "slide_id")
+
+```
+
+Seems like the data is in! From these plots you can clearly see that one of the tissues is of lower quality and thus have fewer unique genes (nFeature_RNA) and UMIs (nCount_RNA).  
+  
+We can also easily plot the spatial locations of a few selected genes. The MOB consists of multiple layers, including the glomerular layer, the external plexiform layer, the mitral cell layer, the internal plexiform layer, and the granule cell layer. A few known gene markers for a couple of these layers are Cdhr1 and Camk2a, so let's plot and see how it looks.  
+  
+```{r fig.width=8, fig.height=8, out.width="100%", fig.cap="Spatial distribution of marker genes."}
+
+col_scale <- viridis::magma(n = 11, direction = -1)
+p1 <- ST.FeaturePlot(se, features = c("Cdhr1", "Camk2a"), indices = 1, max.cutoff = 10, ncol = 1, grid.ncol = 1, cols = col_scale, label.by = "slide_id", show.sb = FALSE)
+p2 <- ST.FeaturePlot(se, features = c("Cdhr1", "Camk2a"), indices = 2, max.cutoff = 3, ncol = 1, grid.ncol = 1, cols = col_scale, label.by = "slide_id", show.sb = FALSE)
+p1 - p2
+
+```
+  
+  
+As one can see, the sample of poorer quality is also more sparse in its gene expression of these marker genes. To address this issue and to be able to analyze these two sections together we need to proceed with the next steps of the analysis. But first of all it can be good to perform some more quality control and filter the data further.
+  

@@ -1,0 +1,279 @@
+# Data analysis
+
+In this section we'll have a look at the Seurat workflow for normalization, dimensionality reduction and batch correction. You can find more detailed information and tutorials on the [Seurat webpage](https://satijalab.org/seurat/articles/get_started.html) as well as on our own [STUtility web page](https://ludvigla.github.io/STUtility_web_site/).
+
+## Normalization
+
+In order to normalize the data we recommend using variance stabilized transformation available in the `SCTransform` function in Seurat as of v3.0.
+
+Since we have a known batch effect between the two sections, we will try to deal with that by specifying the batch in the `vars.to.regress` argument of the function. With more severe batch effects, you may need to integrate the two sections using a data integration method.
+
+Let's see the effect of batch correction. 
+
+```{r include=FALSE}
+
+se.norm <- readRDS("../R_objects/se.norm")
+se.cor <- readRDS("../R_objects/se.cor")
+
+```
+
+
+```{r sctransform, eval=FALSE}
+
+se.norm <- SCTransform(se.subset)
+se.cor <- SCTransform(se.subset, vars.to.regress = "batch")
+
+```
+
+## Dimensionality reduction
+
+We'll start off by running a simple principal component analysis (PCA) followed by UMAP for visualization. We can color the points based on the batch to see how well the two data sets mix.  
+  
+```{r eval=FALSE}
+
+se.norm <- se.norm %>% RunPCA() %>% RunUMAP(dims = 1:30)
+se.cor <- se.cor %>% RunPCA() %>% RunUMAP(dims = 1:30)
+
+```
+
+```{r fig.width=12, fig.height=6, fig.cap="UMAP embedding of MOB data with and without batch correction.", dpi=150}
+
+p1 <- DimPlot(se.norm, reduction = "umap", group.by = "batch", cols = col_samples) + labs(title="No correction")
+p2 <- DimPlot(se.cor, reduction = "umap", group.by = "batch", cols = col_samples) + labs(title="SCT batch correction")
+
+p1 - p2
+
+```
+<br><br>
+  
+Looks like adding the batch correction in SCTransform helped quite a lot to mitigate the batch effect, although we still see that the two tissue sections separate in the UMAP embedding. 
+
+## Data integration
+
+Sometimes, data integration techniques are necessary to perform a joint analysis of the data. Let's try one of the most popular methods called [Harmony](https://portals.broadinstitute.org/harmony/articles/quickstart.html). We'll run this method on our corrected data to see if we can improve it even further. Good to keep in mind is that Harmony operates on the PC vectors, and not on the gene expression values.  
+  
+```{r eval=FALSE}
+
+library(harmony)
+se.cor <- RunHarmony(se.cor, group.by.vars = "batch", assay.use = "SCT") %>% 
+  RunUMAP(reduction = "harmony", dims = 1:30, reduction.name = "umap.harmony")
+
+```
+
+
+```{r fig.width=18, fig.height=6, fig.cap="UMAP embedding of MOB data. A) No correction. B) Correction by regression. C) Correction by data integration", dpi=150}
+
+p1 <- DimPlot(se.norm, reduction = "umap", group.by = "batch", cols = col_samples) + labs(title="A) No correction")
+p2 <- DimPlot(se.cor, reduction = "umap", group.by = "batch", cols = col_samples) + labs(title="B) SCT batch correction")
+p3 <- DimPlot(se.cor, reduction = "umap.harmony", group.by = "batch", cols = col_samples) + labs(title="C) SCT batch correction + Harmony")
+
+p1 + p2 + p3
+
+```
+  
+As you can see, we can integrate the data from our two sections pretty well using these approaches. Harmony seems to have helped align the data very well, and now we can use these harmonized vectors to continue with some downstream analyses instead.
+
+## Spatial color projection
+  
+It is also possible to project the results of a UMAP onto our tissue sections. This can be a quick and useful way of identifying regions with similar gene expression profiles across multiple tissue sections.
+  
+We'll use a neat trick here where we first run UMAP with 3 components, then we mix these three component values to produce an RGB color. This way we obtain a mixed color for each combination of UMAP components for each spot.
+
+```{r eval=FALSE}
+
+se.cor <- RunUMAP(object = se.cor, n.components = 3, reduction = "harmony", dims = 1:30, reduction.name = "umap.3d")
+
+```
+
+```{r fig.width=12, fig.height=6, fig.cap="Spatial color projection of a 3D UMAP", dpi=150}
+
+ST.DimPlot(object = se.cor, dims = 1:3, reduction = "umap.3d", blend = TRUE, dark.theme = TRUE, pt.size = 1.2)
+
+```
+
+## Non-negative matrix factorization
+
+Another fun analysis to run is [NMF](https://ludvigla.github.io/STUtility_web_site/Spatial_Features.html#Matrix_factorization), which is another dimensionality reduction method that has proven to be great at finding underlying patterns of transcriptomic profiles.
+
+Briefly, starting with an expression matrix A with non-negative elements, NMF tries to decompose `A` into `k` preselected factors:
+
+$$
+A \approx W*H
+$$
+
+A factor can be thought of as an expression profile that reflects some unknown signal of heterogeneity such as that of a cell type, multiple co-localized cell types or a biological process. From the resulting matrix H, we can extract information about the contribution of spots to each factor which allows us to visualize the factors on our tissue sections. From the second matrix W, we can extract information about the contribution of genes to each factor. In other words, we can both visualize the factors spatially and characterize them by their top contributing genes. Let's have a look at an example:
+
+```{r eval=FALSE}
+
+se.cor <- RunNMF(se.cor, nfactors = 10)
+
+```
+
+In the plot below, we show five selected factors with their spatial distribution and top contributing genes. 
+
+```{r fig.width=10, fig.height=15, fig.cap="Five example factors from an NMF analysis with k = 10. The left hand side shows the activity of the factor on the tissue sections whereas the right hand side shows the top contributing genes with their associated weights", dpi=150}
+FactorPlot <- function(object, 
+                       factor = 1, 
+                       col.scale = c("darkblue", "cyan", "yellow", "red", "darkred")
+                       ) {
+  p1 <- ST.DimPlot(object, 
+                   dims = factor, 
+                   label.by = "slide_id",
+                   center.zero = F, 
+                   reduction = "NMF", 
+                   ncol = 2, 
+                   pt.size = 1, 
+                   cols = col.scale, 
+                   show.sb = F) & labs(fill = "factor\nactivity")
+  p2 <- FactorGeneLoadingPlot(object, 
+                              factor = factor, 
+                              dark.theme = F) + 
+    labs(title = paste("Factor", factor, "loadings")) +
+    theme(axis.title.y = element_blank()) & labs(y = "gene weight")
+  cowplot::plot_grid(p1, p2, ncol = 2, rel_widths = c(2, 1))
+}
+# FactorPlot(object = se.cor, col.scale = col_scale)
+
+plot_list <- lapply(1:10, function(i) {
+  FactorPlot(object = se.cor, factor = i, col.scale = col_scale)
+})
+
+cowplot::plot_grid(plotlist = plot_list[c(1, 2, 3, 5, 9)], ncol = 1)
+```
+
+Looking at these results, you can see that some factors still display a large difference between the two sections, which is caused by the difference in quality. Even with an effective normalization procedure, some of the factor associated marker genes are still lowly expressed and/or have low detection rates. The NMF method does not operate on the integrated data and is therefore unable to adjust for strong batch effects. However, it is often possible to pick up signals of technical variation with NMF in which case such "technical" factors can be excluded.
+
+
+## Clustering
+
+We can use the harmonized PC vectors (integrated) as input for the clustering algorithm.  
+
+```{r eval=FALSE}
+
+se.cor <- FindNeighbors(object = se.cor, verbose = T, reduction = "harmony", dims = 1:20)
+se.cor <- FindClusters(se.cor)
+
+```
+
+```{r fig.width=12, fig.height=5, dpi=150}
+
+col_clusters <- RColorBrewer::brewer.pal(10, name = "Set3")
+p1 <- ST.FeaturePlot(se.cor, features = "seurat_clusters", ncol = 2, cols = col_clusters, label.by = "slide_id", show.sb = FALSE) + labs(title = "Clusters") & NoLegend()
+p2 <- DimPlot(se.cor, reduction = "umap.harmony", group.by = "seurat_clusters", cols = col_clusters) + labs(title="UMAP")
+
+p1 - p2 + patchwork::plot_layout(widths = c(3, 2))
+
+```
+  
+It looks like the clusters corresponds pretty well with the different layers in the MOB tissue. If we'd like, we can make some annotations for these clusters and correlate them to the anatomical layers.
+
+```{r fig.width=12, fig.height=6, fig.cap="Spatial distribution of clusters", dpi=150}
+
+cluster_annotations <- c(
+  "L09", #0
+  "L08", #1 
+  "L02", #2
+  "L03", #3
+  "L05", #4
+  "L04", #5
+  "L06", #6
+  "L07", #7
+  "L01", #8
+  "L10"
+  )
+se.cor$cluster_annotation <- factor(plyr::mapvalues(x = Idents(se.cor), from = 0:9, to = cluster_annotations), 
+                                              levels = c(paste0("L0", 1:9), "L10"))
+
+col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
+# p1 <- ST.FeaturePlot(se.cor, features = "cluster_annotation", ncol = 2, cols = col_spectral) + labs(title="Clusters") & NoLegend()
+# p2 <- DimPlot(se.cor, reduction = "umap.harmony", group.by = "cluster_annotation", cols = col_spectral) + labs(title="UMAP")
+
+ST.FeaturePlot(se.cor, features = "cluster_annotation", ncol = 2, cols = col_spectral, show.sb = F, dark.theme = T, pt.size = 2, label.by = "slide_id") + labs(title="")
+```
+  
+  
+We can also plot the clusters one by one;
+
+```{r fig.width=9, fig.height=11, "Split view of clusters.", dpi=150}
+
+col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
+ST.FeaturePlot(se.cor, 
+               features = "cluster_annotation", 
+               indices = 2, 
+               cols = col_spectral,
+               split.labels = T, 
+               pt.size = 1, 
+               ncol = 3, 
+               show.sb = F) & 
+  theme(plot.title = element_blank())
+
+```
+
+## Find marker genes
+
+To see which genes are present in each cluster we can run the Seurat function `FindAllMarkers()`.
+
+```{r include=FALSE}
+gene_markers <- readRDS(file = "../R_objects/gene_markers")
+```
+
+
+```{r eval=FALSE}
+
+gene_markers <- FindAllMarkers(se.cor, only.pos = TRUE)
+gene_markers$cluster_annotation <- factor(plyr::mapvalues(x = gene_markers$cluster, from = 0:9, to = cluster_annotations), 
+                                          levels = c(paste0("L0", 1:9), "L10"))
+
+```
+
+```{r}
+
+top3_genes <- gene_markers %>%
+  dplyr::filter(p_val_adj < 0.01) %>%
+  dplyr::group_by(cluster_annotation) %>%
+  dplyr::top_n(wt = avg_log2FC, n = 3) %>%
+  dplyr::arrange(cluster_annotation)
+
+datatable(top3_genes, rownames = F, caption = paste("Top three marker genes for each cluster"))
+
+```
+
+
+```{r marker_dotplot, fig.width=12, fig.height=6, fig.cap="Dot plot of top 5 marker genes per cluster.", dpi=150}
+
+top5_genes <- gene_markers %>%
+  dplyr::filter(p_val_adj < 0.01) %>%
+  dplyr::group_by(cluster_annotation) %>%
+  dplyr::top_n(wt = avg_log2FC, n = 5) %>%
+  dplyr::arrange(cluster_annotation)
+
+DotPlot(se.cor, features = unique(top5_genes$gene), group.by = "cluster_annotation") + 
+    scale_colour_gradientn(colours = RColorBrewer::brewer.pal(n = 11, name = "RdBu") %>% rev()) & 
+    # coord_flip() & 
+    labs(title="Cluster marker genes") & 
+    theme(axis.title = element_blank(), axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+```
+
+Do you see any genes that you recognize?  
+
+<br>
+
+Let's do a few more plots :)
+
+```{r plot_markers_spatial, fig.width=12, fig.height=6, fig.cap="Top left: marker expression in UMAP embedding, top right: marker expression per cluster as a violin plot, bottom: marker expression on tissue sections.", dpi=150}
+
+col_scale <- viridis::magma(n = 11, direction = -1)
+col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
+
+plot_genes <- c("Nrgn", "Apod")
+p1 <- FeaturePlot(se.cor, features = plot_genes, cols = col_scale, reduction = "umap.harmony")
+p2 <- VlnPlot(se.cor, features = plot_genes, ncol = 2, group.by = "cluster_annotation", cols = col_spectral)
+p3 <- ST.FeaturePlot(se.cor, features = plot_genes, ncol = 2, grid.ncol = 2, show.sb = FALSE, cols = col_scale, label.by = "slide_id")
+
+(p1 - p2)/p3
+
+```
+<br><br>
+
+Here we can see how the neuronal gene Nrgn is highly expressed in clusters 1, 2, and 9, which are all present in the inner parts of the MOB tissue (granule cell layer etc), while the Apod gene is a marker of oligodendrocytes and is expressed in clusters 0 and 5, present in the outermost layers of the tissue.  

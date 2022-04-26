@@ -1,0 +1,15 @@
+# Wrap up
+
+There are a lot more things one can do with the data, and what we've done here is just the beginning. Many new exciting tools for performing analyses of spatial omic data are being developed as we speak. What further defines these clusters that we just generated? How are some cells behaving depending on their spatial context? What will we learn if we integrate our data with scRNA-seq or other spatial omic data? Go out and explore!  
+
+<br><br>
+
+This analysis was last compiled on `r Sys.Date()`.  
+  
+<br>
+  
+```{r}
+
+devtools::session_info()
+
+```

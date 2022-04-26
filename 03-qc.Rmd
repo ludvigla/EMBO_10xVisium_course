@@ -1,0 +1,82 @@
+# Quality control and filtering
+
+We should always check the quality of our data before proceeding with downstream analysis. For example, does the data reflect our expectations about the tissue? Do we need to remove outliers before downstream analysis?
+
+## Basic QC metrics
+
+Plotting the spatial distribution of a certain QC metrics is often very useful. Below we show the distribution of unique genes and number of UMIs per spot in our two MOB tissue sections. By visual inspection we can see that both QC metrics correlate with cell density, which is what we generally expect to see. If this is not the case, we might have a technical issue such as tissue detachment, uneven permeabilization, overpermeabilization, mRNA degradation etc.
+
+In this particular example, we see that even though the QC metrics correlate with cell density, there is a strong batch effect between the two sections where the second tissue section has much lower overall quality.
+
+```{r fig.width=12, fig.height=12, fig.cap="Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA = UMI count", dpi=150}
+
+col_scale <- c("darkblue", "cyan", "yellow", "red", "darkred")
+FeatureOverlay(se, features = c("nFeature_RNA", "nCount_RNA"), cols = col_scale, ncols = 2, 
+               pt.size = 1.3, label.by = "slide_id", sampleids = 1:2, value.scale = "all")
+
+```
+  
+Visualizing the distribution of selected QC metrics can be useful to better understand the data. For example, if you need to select filtering thresholds.
+
+For our example, it becomes clear that our two tissue section data sets are highly different in terms of quality. When analyzing a Visium data set generated from a new tissue type, it can be very difficult to determine whether the QC metrics are reasonable. Here, when comparing the two tissue sections side by side, it becomes clear that the second data set is of low quality. As a rule of thumb, we expect to obtain at least 1,000 unique genes per spot on average but you should know that this is highly tissue dependent. Low quality will have a negative impact on downstream analysis.
+
+```{r fig.width=12, fig.height=6, fig.cap="Visualization of basic QC metrics. A) Histogram of unique genes per spot. B) Histogram of total UMI counts per spot. C) Total counts per gene in log10-scale. This is useful to inspect if you need to filter out lowly expressed genes from your data set. D) Total spots per gene. Here we can clearly see a substantial gene dropout in the low quality data set.", dpi=150}
+
+col_samples <- c("#1954A6", "#A7C947")
+p1 <- ggplot() +
+  geom_histogram(data = se[[]], aes(nFeature_RNA, fill = slide_id), alpha = 0.6, bins = 50, position = "identity") +
+  scale_fill_manual(values = col_samples) +
+  ggtitle("A) Unique genes per spot") & NoLegend()
+
+p2 <- ggplot() +
+  geom_histogram(data = se[[]], aes(nCount_RNA, fill = slide_id), alpha = 0.6, bins = 50, position = "identity") +
+  scale_fill_manual(values = col_samples) +
+  ggtitle("B) Total counts per spot") & NoLegend()
+
+gene_attr <- rbind(data.frame(nUMI = Matrix::rowSums(se@assays$RNA@counts[, se$slide_id == "V19D02-087_B1"]), 
+                        nSpots = Matrix::rowSums(se@assays$RNA@counts[, se$slide_id == "V19D02-087_B1"] > 0),
+                        slide_id = "V19D02-087_B1"),
+                   data.frame(nUMI = Matrix::rowSums(se@assays$RNA@counts[, se$slide_id == "V19T26-013_A1"]), 
+                        nSpots = Matrix::rowSums(se@assays$RNA@counts[, se$slide_id == "V19T26-013_A1"] > 0),
+                        slide_id = "V19T26-013_A1"))
+p3 <- ggplot() +
+  geom_histogram(data = gene_attr, aes(nUMI, fill = slide_id), alpha = 0.6, bins = 50, position = "identity") +
+  scale_fill_manual(values = col_samples) +
+  scale_x_log10() +
+  ggtitle("C) Total counts per gene (log10 scale)")
+
+p4 <- ggplot() +
+  geom_histogram(data = gene_attr, aes(nSpots, fill = slide_id), alpha = 0.6,  bins = 50, position = "identity") +
+  scale_fill_manual(values = col_samples) +
+  ggtitle("D) Total spots per gene")
+
+(p1 - p2)/(p3 - p4) & theme_linedraw()
+```
+
+## Other metrics
+  
+It can also be useful to explore other features of the data set to use for filtering, for example mitochondrial transcript content or ribosomal protein coding transcript content. Mitochondrial genes are prefixed with “mt-” in MGI nomenclature so we can collect these genes and then calculate the percentage of mitochondrial content per spot and add this information to our meta.data.  
+
+```{r fig.width=12, fig.height=12, fig.cap="Mitochondrial transcript content and ribosomal protein coding transcript content.", dpi=150}
+se <- PercentageFeatureSet(se, pattern = "^mt-", col.name = "pct.mt")
+se <- PercentageFeatureSet(se, pattern = "^Rpl|^Rps-", col.name = "pct.ribo")
+
+col_samples <- c("#1954A6", "#A7C947")
+p1 <- ST.FeaturePlot(se, features = c("pct.mt"), cols = col_scale, ncol = 2, pt.size = 1.3, show.sb = FALSE, label.by = "slide_id")
+p2 <- VlnPlot(se, features = c("pct.mt"), group.by = "slide_id", cols = col_samples) & NoLegend()
+p3 <- ST.FeaturePlot(se, features = c("pct.ribo"), cols = col_scale, ncol = 2, pt.size = 1.3, show.sb = FALSE, label.by = "slide_id")
+p4 <- VlnPlot(se, features = c("pct.ribo"), group.by = "slide_id", cols = col_samples) & NoLegend()
+
+(p1-p2) / (p3-p4) & patchwork::plot_layout(widths = c(2,1))
+```
+  
+## Filter
+
+Finally, let's filter the data to remove spots with very high mitochondrial content. You can filter the data based on many different parameters, it's up to you to test and decide what you think is best for the analysis you want to perform.  
+  
+```{r}
+# Keep spots with less than 30% mitochondrial content
+se.subset <- SubsetSTData(se, expression = pct.mt < 30)
+
+cat("Spots removed: ", ncol(se) - ncol(se.subset), "\n")
+```
