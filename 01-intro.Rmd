@@ -45,8 +45,8 @@ Any number of extra columns can be added to the `infoTable` data frame that you 
 Now let's create the `infoTable` and add a bit more information about the samples!  
 With these samples, we know that one MOB is of higher quality than the other, so let's add that information and we might be able to check later how that influences the data. We'll also add the slide and capture area identifiers to the meta data - that's always useful information to keep!  
 
-
 ```{r}
+
 infoTable <- data.frame(samples = c(file.path("../data", "V19D02-087_B1", "filtered_feature_bc_matrix.h5"),
                                     file.path("../data", "V19T26-013_A1", "filtered_feature_bc_matrix.h5")),
                         spotfiles = c(file.path("../data", "V19D02-087_B1", "spatial", "tissue_positions_list.csv"),
@@ -62,6 +62,7 @@ infoTable <- data.frame(samples = c(file.path("../data", "V19D02-087_B1", "filte
                         )
 
 datatable(infoTable, rownames = F, caption = paste("Our infoTable with added sample information"))
+
 ```
 <br><br>
 

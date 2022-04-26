@@ -234,12 +234,14 @@ top3_genes <- gene_markers %>%
   dplyr::top_n(wt = avg_log2FC, n = 3) %>%
   dplyr::arrange(cluster_annotation)
 
-datatable(top3_genes, rownames = F, caption = paste("Top three marker genes for each cluster"))
+top3_genes %>%
+  mutate(across(c(p_val, avg_log2FC, p_val_adj), ~ format(.x, digits = 3))) %>%
+  datatable(rownames = F, caption = paste("Top three marker genes for each cluster"))
 
 ```
 
 
-```{r marker_dotplot, fig.width=12, fig.height=6, fig.cap="Dot plot of top 5 marker genes per cluster.", dpi=150}
+```{r fig.width=12, fig.height=6, fig.cap="Dot plot of top 5 marker genes per cluster.", dpi=150}
 
 top5_genes <- gene_markers %>%
   dplyr::filter(p_val_adj < 0.01) %>%
@@ -261,7 +263,7 @@ Do you see any genes that you recognize?
 
 Let's do a few more plots :)
 
-```{r plot_markers_spatial, fig.width=12, fig.height=6, fig.cap="Top left: marker expression in UMAP embedding, top right: marker expression per cluster as a violin plot, bottom: marker expression on tissue sections.", dpi=150}
+```{r fig.width=18, fig.height=9, fig.cap="Top left: marker expression in UMAP embedding, top right: marker expression per cluster as a violin plot, bottom: marker expression on tissue sections.", dpi=150}
 
 col_scale <- viridis::magma(n = 11, direction = -1)
 col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
