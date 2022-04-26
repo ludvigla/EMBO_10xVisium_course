@@ -24,7 +24,7 @@ References:
 </font>
 
 
-![](../imgs/logo_kth.png){height=50px, width=50px} . 
-![](../imgs/logo_scilifelab.png){height=50px} . 
-![](../imgs/logo_spatial-research.png){height=50px} . 
-![](../imgs/logo_embo.png){height=50px} . 
+![](imgs/logo_kth.png){height=50px, width=50px} . 
+![](imgs/logo_scilifelab.png){height=50px} . 
+![](imgs/logo_spatial-research.png){height=50px} . 
+![](imgs/logo_embo.png){height=50px} . 

@@ -7,10 +7,10 @@ bookdown::gitbook:
       position: static
     toc:
       before: |
-        <a href="https://www.embo.org/"><img src="../imgs/logo_embo.png" width="80"></a>
-        <a href="https://spatialresearch.org/"><img src="../imgs/logo_spatial-research.png" width="80"></a>
-        <a href="https://www.kth.se/"><img src="../imgs/logo_kth.png" width="40"></a>
-        <a href="https://www.scilifelab.se/"><img src="../imgs/logo_scilifelab.png" width="80"></a>
+        <a href="https://www.embo.org/"><img src="imgs/logo_embo.png" width="80"></a>
+        <a href="https://spatialresearch.org/"><img src="imgs/logo_spatial-research.png" width="80"></a>
+        <a href="https://www.kth.se/"><img src="imgs/logo_kth.png" width="40"></a>
+        <a href="https://www.scilifelab.se/"><img src="imgs/logo_scilifelab.png" width="80"></a>
 bookdown::pdf_book:
   keep_tex: yes
 bookdown::html_book:
