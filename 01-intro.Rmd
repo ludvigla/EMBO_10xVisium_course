@@ -79,7 +79,7 @@ se <- InputFromTable(infotable = infoTable,
                      minUMICountsPerGene = 100,
                      minUMICountsPerSpot = 500,
                      platform =  "Visium", 
-                     verbose = T)
+                     verbose = TRUE)
 
 ```
 

@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -201,7 +202,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-3"><a href="import-data.html#cb3-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">minUMICountsPerGene =</span> <span class="dv">100</span>,</span>
 <span id="cb3-4"><a href="import-data.html#cb3-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">minUMICountsPerSpot =</span> <span class="dv">500</span>,</span>
 <span id="cb3-5"><a href="import-data.html#cb3-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">platform =</span>  <span class="st">&quot;Visium&quot;</span>, </span>
-<span id="cb3-6"><a href="import-data.html#cb3-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> T)</span></code></pre></div>
+<span id="cb3-6"><a href="import-data.html#cb3-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 <pre><code>## Using spotfiles to remove spots outside of tissue
 ## Loading ../data/V19D02-087_B1/filtered_feature_bc_matrix.h5 count matrix from a &#39;Visium&#39; experiment
 ## Loading ../data/V19T26-013_A1/filtered_feature_bc_matrix.h5 count matrix from a &#39;Visium&#39; experiment
@@ -210,21 +211,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##   Spots removed:  23  
 ##   Genes removed:  37684  
 ## Saving capture area ranges to Staffli object 
-## After filtering the dimensions of the experiment is: [11025 genes, 2346 spots]</code></pre>
+## After filtering the dimensions of the experiment is: [11025 genes, 2345 spots]</code></pre>
 <p><br></p>
 <p>To check everything looks ok, we can do a few plots of the data.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="import-data.html#cb5-1" aria-hidden="true" tabindex="-1"></a>col_samples <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#1954A6&quot;</span>, <span class="st">&quot;#A7C947&quot;</span>)</span>
 <span id="cb5-2"><a href="import-data.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nFeature_RNA&quot;</span>, <span class="st">&quot;nCount_RNA&quot;</span>), <span class="at">group.by =</span> <span class="st">&quot;slide_id&quot;</span>, <span class="at">cols =</span> col_samples)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-5-1.png" alt="Violin plot of unique genes and UMIs." width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-7-1.png" alt="Violin plot of unique genes and UMIs." width="100%" />
 <p class="caption">
 Figure 2.1: Violin plot of unique genes and UMIs.
 </p>
 </div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="import-data.html#cb6-1" aria-hidden="true" tabindex="-1"></a>col_scale <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;darkblue&quot;</span>, <span class="st">&quot;cyan&quot;</span>, <span class="st">&quot;yellow&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkred&quot;</span>)</span>
 <span id="cb6-2"><a href="import-data.html#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ST.FeaturePlot</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nFeature_RNA&quot;</span>), <span class="at">cols =</span> col_scale, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">pt.size =</span> <span class="fl">1.8</span>, <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-6-1.png" alt="Spatial distribution of unique genes and UMIs." width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-8-1.png" alt="Spatial distribution of unique genes and UMIs." width="100%" />
 <p class="caption">
 Figure 2.2: Spatial distribution of unique genes and UMIs.
 </p>
@@ -235,8 +236,8 @@ Figure 2.2: Spatial distribution of unique genes and UMIs.
 <span id="cb7-2"><a href="import-data.html#cb7-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ST.FeaturePlot</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;Cdhr1&quot;</span>, <span class="st">&quot;Camk2a&quot;</span>), <span class="at">indices =</span> <span class="dv">1</span>, <span class="at">max.cutoff =</span> <span class="dv">10</span>, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">grid.ncol =</span> <span class="dv">1</span>, <span class="at">cols =</span> col_scale, <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>, <span class="at">show.sb =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb7-3"><a href="import-data.html#cb7-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ST.FeaturePlot</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;Cdhr1&quot;</span>, <span class="st">&quot;Camk2a&quot;</span>), <span class="at">indices =</span> <span class="dv">2</span>, <span class="at">max.cutoff =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">grid.ncol =</span> <span class="dv">1</span>, <span class="at">cols =</span> col_scale, <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>, <span class="at">show.sb =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb7-4"><a href="import-data.html#cb7-4" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">-</span> p2</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-7-1.png" alt="Spatial distribution of marker genes." width="100%" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-9-1.png" alt="Spatial distribution of marker genes." width="100%" />
 <p class="caption">
 Figure 2.3: Spatial distribution of marker genes.
 </p>

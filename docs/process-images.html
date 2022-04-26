@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.3 Process images | Analysis of MOB Visium data using STutility</title>
-  <meta name="description" content="3.3 Process images | Analysis of MOB Visium data using STutility" />
+  <title>3.4 Process images | Analysis of MOB Visium data using STutility</title>
+  <meta name="description" content="3.4 Process images | Analysis of MOB Visium data using STutility" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.3 Process images | Analysis of MOB Visium data using STutility" />
+  <meta property="og:title" content="3.4 Process images | Analysis of MOB Visium data using STutility" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.3 Process images | Analysis of MOB Visium data using STutility" />
+  <meta name="twitter:title" content="3.4 Process images | Analysis of MOB Visium data using STutility" />
   
   
   
@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -193,42 +194,41 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="process-images" class="section level2 hasAnchor" number="3.3">
-<h2><span class="header-section-number">3.3</span> Process images<a href="process-images.html#process-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="process-images" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Process images<a href="process-images.html#process-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>As you can see, the two sections are placed in different orientations on the capture area. Let’s take care of that.</p>
 <p>STUtility provide 3 different methods to adjust the H&amp;E images:
 * <code>WarpImages</code> : Apply predefined rigid transformations such as rotation, translation and reflection
 * <code>AlignImages</code> : An automatic image registration method that relies on edge detection. This method is sensitive to deformations and other tissue artefacts.
 * <code>ManualALignImages</code> : Opens up an interactive shiny web application where rigid transformations such as rotations, translations and reflections can be applied to the data.</p>
-<p>Below, we’ll flip the first section -90deg and apply a translation along the y axis:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="process-images.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; Lets rotate the first section 90 degrees to match the second section</span></span>
-<span id="cb12-2"><a href="process-images.html#cb12-2" aria-hidden="true" tabindex="-1"></a>transforms <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="st">&quot;angle&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">90</span>, <span class="st">&quot;shift.y&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">60</span>))</span>
-<span id="cb12-3"><a href="process-images.html#cb12-3" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">WarpImages</span>(se, transforms)</span>
-<span id="cb12-4"><a href="process-images.html#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="process-images.html#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(se, <span class="at">method =</span> <span class="st">&quot;raster&quot;</span>, <span class="at">annotate =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-11"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-11-1.png" alt="Processed H&amp;E images" width="1800" />
+<p>Below, we’ll flip the first section -90deg:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="process-images.html#cb14-1" aria-hidden="true" tabindex="-1"></a>transforms <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="st">&quot;1&quot;</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="st">&quot;angle&quot;</span> <span class="ot">=</span> <span class="sc">-</span><span class="dv">90</span>))</span>
+<span id="cb14-2"><a href="process-images.html#cb14-2" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">WarpImages</span>(se, transforms)</span>
+<span id="cb14-3"><a href="process-images.html#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="process-images.html#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(se, <span class="at">method =</span> <span class="st">&quot;raster&quot;</span>, <span class="at">type =</span> <span class="st">&quot;processed&quot;</span>, <span class="at">annotate =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-15-1.png" alt="Processed H&amp;E images" width="1800" />
 <p class="caption">
-Figure 3.3: Processed H&amp;E images
+Figure 3.4: Processed H&amp;E images
 </p>
 </div>
 <p>Now that we have the two tissue sections aligned, it will be much easier to compare expression patterns between them.</p>
 <p>We can now also plot gene expression values on top of the H&amp;E images.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="process-images.html#cb13-1" aria-hidden="true" tabindex="-1"></a>col_scale <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;darkblue&quot;</span>, <span class="st">&quot;cyan&quot;</span>, <span class="st">&quot;yellow&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkred&quot;</span>)</span>
-<span id="cb13-2"><a href="process-images.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureOverlay</span>(se, </span>
-<span id="cb13-3"><a href="process-images.html#cb13-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">features =</span> <span class="st">&quot;Nrgn&quot;</span>, </span>
-<span id="cb13-4"><a href="process-images.html#cb13-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">sampleids =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, </span>
-<span id="cb13-5"><a href="process-images.html#cb13-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">ncols =</span> <span class="dv">2</span>, </span>
-<span id="cb13-6"><a href="process-images.html#cb13-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">pt.size =</span> <span class="fl">1.5</span>, </span>
-<span id="cb13-7"><a href="process-images.html#cb13-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">max.cutoff =</span> <span class="st">&quot;q99&quot;</span>,</span>
-<span id="cb13-8"><a href="process-images.html#cb13-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">cols =</span> col_scale, </span>
-<span id="cb13-9"><a href="process-images.html#cb13-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">add.alpha =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb13-10"><a href="process-images.html#cb13-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>,</span>
-<span id="cb13-11"><a href="process-images.html#cb13-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">type =</span> <span class="st">&quot;processed&quot;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-12"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-12-1.png" alt="Spatial distribution of Nrgn" width="1800" />
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="process-images.html#cb15-1" aria-hidden="true" tabindex="-1"></a>col_scale <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;darkblue&quot;</span>, <span class="st">&quot;cyan&quot;</span>, <span class="st">&quot;yellow&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkred&quot;</span>)</span>
+<span id="cb15-2"><a href="process-images.html#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureOverlay</span>(se, </span>
+<span id="cb15-3"><a href="process-images.html#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">features =</span> <span class="st">&quot;Nrgn&quot;</span>, </span>
+<span id="cb15-4"><a href="process-images.html#cb15-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">sampleids =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, </span>
+<span id="cb15-5"><a href="process-images.html#cb15-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">ncols =</span> <span class="dv">2</span>, </span>
+<span id="cb15-6"><a href="process-images.html#cb15-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">pt.size =</span> <span class="fl">2.5</span>, </span>
+<span id="cb15-7"><a href="process-images.html#cb15-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">max.cutoff =</span> <span class="st">&quot;q99&quot;</span>,</span>
+<span id="cb15-8"><a href="process-images.html#cb15-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">cols =</span> col_scale, </span>
+<span id="cb15-9"><a href="process-images.html#cb15-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">add.alpha =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb15-10"><a href="process-images.html#cb15-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>,</span>
+<span id="cb15-11"><a href="process-images.html#cb15-11" aria-hidden="true" tabindex="-1"></a>               <span class="at">type =</span> <span class="st">&quot;processed&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-16-1.png" alt="Spatial distribution of Nrgn" width="1800" />
 <p class="caption">
-Figure 3.4: Spatial distribution of Nrgn
+Figure 3.5: Spatial distribution of Nrgn
 </p>
 </div>
 <p>For the marker gene Nrgn, we can see that the gene is specifically expressed in one region of the MOB, although the counts are much higher in the first section due to the overall higher quality of the data set.</p>

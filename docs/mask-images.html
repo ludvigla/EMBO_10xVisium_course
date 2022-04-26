@@ -4,18 +4,18 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>3.2 Mask images | Analysis of MOB Visium data using STutility</title>
-  <meta name="description" content="3.2 Mask images | Analysis of MOB Visium data using STutility" />
+  <title>3.3 Mask images | Analysis of MOB Visium data using STutility</title>
+  <meta name="description" content="3.3 Mask images | Analysis of MOB Visium data using STutility" />
   <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="3.2 Mask images | Analysis of MOB Visium data using STutility" />
+  <meta property="og:title" content="3.3 Mask images | Analysis of MOB Visium data using STutility" />
   <meta property="og:type" content="book" />
   
   
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="3.2 Mask images | Analysis of MOB Visium data using STutility" />
+  <meta name="twitter:title" content="3.3 Mask images | Analysis of MOB Visium data using STutility" />
   
   
   
@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="load-images.html"/>
+<link rel="prev" href="crop-images.html"/>
 <link rel="next" href="process-images.html"/>
 <script src="assets/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -193,15 +194,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="mask-images" class="section level2 hasAnchor" number="3.2">
-<h2><span class="header-section-number">3.2</span> Mask images<a href="mask-images.html#mask-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="mask-images" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Mask images<a href="mask-images.html#mask-images" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Next, we can apply a mask to our H&amp;E images to remove the background. Note that the masking procedure relies on sharp contrasts in the H&amp;E image and will therefore perform poorly on images with diffuse borders in which case the masking strategy needs to be adjusted or done manually.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="mask-images.html#cb11-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">MaskImages</span>(<span class="at">object =</span> se)</span>
-<span id="cb11-2"><a href="mask-images.html#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(se, <span class="at">method =</span> <span class="st">&quot;raster&quot;</span>, <span class="at">type =</span> <span class="st">&quot;masked&quot;</span>, <span class="at">annotate =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-10"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-10-1.png" alt="Masked H&amp;E images" width="1800" />
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="mask-images.html#cb13-1" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">MaskImages</span>(<span class="at">object =</span> se)</span>
+<span id="cb13-2"><a href="mask-images.html#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(se, <span class="at">method =</span> <span class="st">&quot;raster&quot;</span>, <span class="at">type =</span> <span class="st">&quot;masked&quot;</span>, <span class="at">annotate =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-14"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-14-1.png" alt="Masked H&amp;E images" width="1800" />
 <p class="caption">
-Figure 3.2: Masked H&amp;E images
+Figure 3.3: Masked H&amp;E images
 </p>
 </div>
 </div>
@@ -210,7 +211,7 @@ Figure 3.2: Masked H&amp;E images
           </div>
         </div>
       </div>
-<a href="load-images.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="crop-images.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="process-images.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

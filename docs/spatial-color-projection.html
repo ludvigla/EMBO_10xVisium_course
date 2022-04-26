@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -197,10 +198,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">5.4</span> Spatial color projection<a href="spatial-color-projection.html#spatial-color-projection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>It is also possible to project the results of a UMAP onto our tissue sections. This can be a quick and useful way of identifying regions with similar gene expression profiles across multiple tissue sections.</p>
 <p>We’ll use a neat trick here where we first run UMAP with 3 components, then we mix these three component values to produce an RGB color. This way we obtain a mixed color for each combination of UMAP components for each spot.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="spatial-color-projection.html#cb24-1" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> se.cor, <span class="at">n.components =</span> <span class="dv">3</span>, <span class="at">reduction =</span> <span class="st">&quot;harmony&quot;</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction.name =</span> <span class="st">&quot;umap.3d&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="spatial-color-projection.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ST.DimPlot</span>(<span class="at">object =</span> se.cor, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">reduction =</span> <span class="st">&quot;umap.3d&quot;</span>, <span class="at">blend =</span> <span class="cn">TRUE</span>, <span class="at">dark.theme =</span> <span class="cn">TRUE</span>, <span class="at">pt.size =</span> <span class="fl">1.2</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-23"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-23-1.png" alt="Spatial color projection of a 3D UMAP" width="1800" />
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="spatial-color-projection.html#cb26-1" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> se.cor, <span class="at">n.components =</span> <span class="dv">3</span>, <span class="at">reduction =</span> <span class="st">&quot;harmony&quot;</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction.name =</span> <span class="st">&quot;umap.3d&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="spatial-color-projection.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ST.DimPlot</span>(<span class="at">object =</span> se.cor, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">reduction =</span> <span class="st">&quot;umap.3d&quot;</span>, <span class="at">blend =</span> <span class="cn">TRUE</span>, <span class="at">dark.theme =</span> <span class="cn">TRUE</span>, <span class="at">pt.size =</span> <span class="fl">1.8</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-27"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-27-1.png" alt="Spatial color projection of a 3D UMAP" width="1800" />
 <p class="caption">
 Figure 5.3: Spatial color projection of a 3D UMAP
 </p>

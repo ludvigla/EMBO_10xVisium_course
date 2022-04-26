@@ -7,11 +7,32 @@ The H&E image is an integral part of the 10x Visium data set. It provides high r
 With the Seurat object created, we are ready to load the H&E images from the file paths provided in the `infoTable`. The `LoadImages()` function allow you to load the images into the Seurat object and will automatically save a scaled down version of each image that you can use for plotting.
 
 ```{r}
+
 se <- LoadImages(se, time.resolve = FALSE, verbose = TRUE)
+
 ```
 
 ```{r fig.width=12, fig.height=6, fig.cap="Raw H&E images", dpi=150}
+
 ImagePlot(se, method = "raster", type = "raw", annotate = FALSE)
+
+```
+
+## Crop images
+
+Sometimes we might be interested in only a small part of the tissue or we simply want to remove empty background from our H&E images. In this case, there is an option to crop the images by defining a list of "crop windows" to subset our data by. To make things easier, a helper function `GetCropWindows()` is provided to extract such crop windows around predefined groups of spots. 
+
+```{r}
+
+crop.windows <- GetCropWindows(object = se, group.by = "slide_id", xy_padding = 70)
+se <- CropImages(se, crop.geometry.list = crop.windows)
+
+```
+
+```{r fig.width=12, fig.height=6, fig.cap="Raw H&E images", dpi=150}
+
+ImagePlot(se, method = "raster", type = "raw", annotate = FALSE)
+
 ```
 
 ## Mask images
@@ -34,16 +55,15 @@ STUtility provide 3 different methods to adjust the H&E images:
 * `AlignImages` : An automatic image registration method that relies on edge detection. This method is sensitive to deformations and other tissue artefacts. 
 * `ManualALignImages` : Opens up an interactive shiny web application where rigid transformations such as rotations, translations and reflections can be applied to the data.
 
-Below, we'll flip the first section -90deg and apply a translation along the y axis:
+Below, we'll flip the first section -90deg:
 
 
 ```{r fig.width=12, fig.height=6, fig.cap="Processed H&E images", dpi=150}
 
-#' Lets rotate the first section 90 degrees to match the second section
-transforms <- list("1" = list("angle" = -90, "shift.y" = -60))
+transforms <- list("1" = list("angle" = -90))
 se <- WarpImages(se, transforms)
 
-ImagePlot(se, method = "raster", annotate = FALSE)
+ImagePlot(se, method = "raster", type = "processed", annotate = FALSE)
 ```
 Now that we have the two tissue sections aligned, it will be much easier to compare expression patterns between them.
 
@@ -56,7 +76,7 @@ FeatureOverlay(se,
                features = "Nrgn", 
                sampleids = 1:2, 
                ncols = 2, 
-               pt.size = 1.5, 
+               pt.size = 2.5, 
                max.cutoff = "q99",
                cols = col_scale, 
                add.alpha = TRUE,

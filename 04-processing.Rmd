@@ -12,8 +12,10 @@ Let's see the effect of batch correction.
 
 ```{r include=FALSE}
 
-se.norm <- readRDS("../R_objects/se.norm")
-se.cor <- readRDS("../R_objects/se.cor")
+# FOR BOOKDOWN MAKERS
+# These files need to be loaded to make the book
+se.norm <- readRDS("R_objects/se.norm")
+se.cor <- readRDS("R_objects/se.cor")
 
 ```
 
@@ -87,7 +89,7 @@ se.cor <- RunUMAP(object = se.cor, n.components = 3, reduction = "harmony", dims
 
 ```{r fig.width=12, fig.height=6, fig.cap="Spatial color projection of a 3D UMAP", dpi=150}
 
-ST.DimPlot(object = se.cor, dims = 1:3, reduction = "umap.3d", blend = TRUE, dark.theme = TRUE, pt.size = 1.2)
+ST.DimPlot(object = se.cor, dims = 1:3, reduction = "umap.3d", blend = TRUE, dark.theme = TRUE, pt.size = 1.8)
 
 ```
 
@@ -122,7 +124,7 @@ FactorPlot <- function(object,
                    center.zero = F, 
                    reduction = "NMF", 
                    ncol = 2, 
-                   pt.size = 1, 
+                   pt.size = 1.3, 
                    cols = col.scale, 
                    show.sb = F) & labs(fill = "factor\nactivity")
   p2 <- FactorGeneLoadingPlot(object, 
@@ -138,7 +140,7 @@ plot_list <- lapply(1:10, function(i) {
   FactorPlot(object = se.cor, factor = i, col.scale = col_scale)
 })
 
-cowplot::plot_grid(plotlist = plot_list[c(1, 2, 3, 5, 9)], ncol = 1)
+cowplot::plot_grid(plotlist = plot_list[c(1, 2, 4, 5, 9)], ncol = 1)
 ```
 
 Looking at these results, you can see that some factors still display a large difference between the two sections, which is caused by the difference in quality. Even with an effective normalization procedure, some of the factor associated marker genes are still lowly expressed and/or have low detection rates. The NMF method does not operate on the integrated data and is therefore unable to adjust for strong batch effects. However, it is often possible to pick up signals of technical variation with NMF in which case such "technical" factors can be excluded.
@@ -158,7 +160,7 @@ se.cor <- FindClusters(se.cor)
 ```{r fig.width=12, fig.height=5, dpi=150}
 
 col_clusters <- RColorBrewer::brewer.pal(10, name = "Set3")
-p1 <- ST.FeaturePlot(se.cor, features = "seurat_clusters", ncol = 2, cols = col_clusters, label.by = "slide_id", show.sb = FALSE) + labs(title = "Clusters") & NoLegend()
+p1 <- ST.FeaturePlot(se.cor, features = "seurat_clusters", ncol = 2, cols = col_clusters, label.by = "slide_id", show.sb = FALSE, pt.size = 1.5) + labs(title = "Clusters") & NoLegend()
 p2 <- DimPlot(se.cor, reduction = "umap.harmony", group.by = "seurat_clusters", cols = col_clusters) + labs(title="UMAP")
 
 p1 - p2 + patchwork::plot_layout(widths = c(3, 2))
@@ -178,13 +180,12 @@ cluster_annotations <- c(
   "L04", #5
   "L06", #6
   "L07", #7
-  "L01", #8
-  "L10"
+  "L01" #8
   )
-se.cor$cluster_annotation <- factor(plyr::mapvalues(x = Idents(se.cor), from = 0:9, to = cluster_annotations), 
-                                              levels = c(paste0("L0", 1:9), "L10"))
+se.cor$cluster_annotation <- factor(plyr::mapvalues(x = Idents(se.cor), from = 0:8, to = cluster_annotations), 
+                                              levels = c(paste0("L0", 1:9)))
 
-col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
+col_spectral <- RColorBrewer::brewer.pal(9, name = "Spectral")
 # p1 <- ST.FeaturePlot(se.cor, features = "cluster_annotation", ncol = 2, cols = col_spectral) + labs(title="Clusters") & NoLegend()
 # p2 <- DimPlot(se.cor, reduction = "umap.harmony", group.by = "cluster_annotation", cols = col_spectral) + labs(title="UMAP")
 
@@ -194,15 +195,15 @@ ST.FeaturePlot(se.cor, features = "cluster_annotation", ncol = 2, cols = col_spe
   
 We can also plot the clusters one by one;
 
-```{r fig.width=9, fig.height=11, "Split view of clusters.", dpi=150}
+```{r fig.width=9, fig.height=10, "Split view of clusters.", dpi=150}
 
-col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
+col_spectral <- RColorBrewer::brewer.pal(9, name = "Spectral")
 ST.FeaturePlot(se.cor, 
                features = "cluster_annotation", 
                indices = 2, 
                cols = col_spectral,
                split.labels = T, 
-               pt.size = 1, 
+               pt.size = 1.5, 
                ncol = 3, 
                show.sb = F) & 
   theme(plot.title = element_blank())
@@ -214,15 +215,19 @@ ST.FeaturePlot(se.cor,
 To see which genes are present in each cluster we can run the Seurat function `FindAllMarkers()`.
 
 ```{r include=FALSE}
-gene_markers <- readRDS(file = "../R_objects/gene_markers")
+
+# FOR BOOKDOWN MAKERS
+# This file need to be loaded to make the book
+gene_markers <- readRDS(file = "R_objects/gene_markers")
+
 ```
 
 
 ```{r eval=FALSE}
 
 gene_markers <- FindAllMarkers(se.cor, only.pos = TRUE)
-gene_markers$cluster_annotation <- factor(plyr::mapvalues(x = gene_markers$cluster, from = 0:9, to = cluster_annotations), 
-                                          levels = c(paste0("L0", 1:9), "L10"))
+gene_markers$cluster_annotation <- factor(plyr::mapvalues(x = gene_markers$cluster, from = 0:8, to = cluster_annotations), 
+                                          levels = c(paste0("L0", 1:9)))
 
 ```
 
@@ -271,7 +276,7 @@ col_spectral <- RColorBrewer::brewer.pal(10, name = "Spectral")
 plot_genes <- c("Nrgn", "Apod")
 p1 <- FeaturePlot(se.cor, features = plot_genes, cols = col_scale, reduction = "umap.harmony")
 p2 <- VlnPlot(se.cor, features = plot_genes, ncol = 2, group.by = "cluster_annotation", cols = col_spectral)
-p3 <- ST.FeaturePlot(se.cor, features = plot_genes, ncol = 2, grid.ncol = 2, show.sb = FALSE, cols = col_scale, label.by = "slide_id")
+p3 <- ST.FeaturePlot(se.cor, features = plot_genes, ncol = 2, grid.ncol = 2, pt.size = 1.5, show.sb = FALSE, cols = col_scale, label.by = "slide_id")
 
 (p1 - p2)/p3
 
@@ -279,3 +284,19 @@ p3 <- ST.FeaturePlot(se.cor, features = plot_genes, ncol = 2, grid.ncol = 2, sho
 <br><br>
 
 Here we can see how the neuronal gene Nrgn is highly expressed in clusters 1, 2, and 9, which are all present in the inner parts of the MOB tissue (granule cell layer etc), while the Apod gene is a marker of oligodendrocytes and is expressed in clusters 0 and 5, present in the outermost layers of the tissue.  
+
+
+```{r eval=FALSE, include=FALSE}
+
+# FOR BOOKDOWN MAKERS
+# Create a new directory to store rds files in which we will load so that we don't have to rerun every step
+# when creating the book. Code chunks with eval=FALSE will not be evaluated and in some cases you need to load
+# R objects to make following code chunks work properly.
+# Make sure to put the R_objects folder inside .gitignore
+dir.create("R_objects")
+saveRDS(object = se.norm, file = "R_objects/se.norm")
+saveRDS(object = se.cor, file = "R_objects/se.cor")
+saveRDS(object = gene_markers, file = "R_objects/gene_markers")
+
+```
+

@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -199,8 +200,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><br><br></p>
 <p>This analysis was last compiled on 2022-04-26.</p>
 <p><br></p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="wrap-up.html#cb36-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
-<pre><code>## ─ Session info ───────────────────────────────────────────────────────────────────────────────────
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="wrap-up.html#cb38-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">session_info</span>()</span></code></pre></div>
+<pre><code>## ─ Session info ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.1.3 (2022-03-10)
 ##  os       macOS Monterey 12.3.1
@@ -214,7 +215,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  rstudio  2022.02.1+461 Prairie Trillium (desktop)
 ##  pandoc   2.18 @ /Users/ludviglarsson/anaconda3/envs/R4.1/bin/ (via rmarkdown)
 ## 
-## ─ Packages ───────────────────────────────────────────────────────────────────────────────────────
+## ─ Packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ##  package         * version date (UTC) lib source
 ##  abind             1.4-5   2016-07-21 [1] CRAN (R 4.1.3)
 ##  akima             0.6-3.3 2022-04-19 [1] CRAN (R 4.1.3)
@@ -342,7 +343,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  ROCR              1.0-11  2020-05-02 [1] CRAN (R 4.1.3)
 ##  rpart             4.1.16  2022-01-24 [1] CRAN (R 4.1.2)
 ##  rprojroot         2.0.3   2022-04-02 [1] CRAN (R 4.1.3)
-##  rsconnect         0.8.25  2021-11-19 [1] CRAN (R 4.1.1)
 ##  RSpectra          0.16-0  2019-12-01 [1] CRAN (R 4.1.3)
 ##  rstudioapi        0.13    2020-11-12 [1] CRAN (R 4.1.0)
 ##  Rtsne             0.16    2022-04-17 [1] CRAN (R 4.1.3)
@@ -356,7 +356,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  Seurat          * 4.1.0   2022-01-14 [1] CRAN (R 4.1.3)
 ##  SeuratObject    * 4.0.4   2021-11-23 [1] CRAN (R 4.1.3)
 ##  sf                1.0-7   2022-03-07 [1] CRAN (R 4.1.2)
-##  shiny             1.7.1   2021-10-02 [1] CRAN (R 4.1.1)
+##  shiny           * 1.7.1   2021-10-02 [1] CRAN (R 4.1.1)
 ##  shinyjs           2.1.0   2021-12-23 [1] CRAN (R 4.1.3)
 ##  sp                1.4-6   2021-11-14 [1] CRAN (R 4.1.1)
 ##  spatstat.core     2.4-2   2022-04-01 [1] CRAN (R 4.1.3)
@@ -369,7 +369,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  spdep             1.2-4   2022-04-18 [1] CRAN (R 4.1.3)
 ##  stringi           1.7.6   2021-11-29 [1] CRAN (R 4.1.1)
 ##  stringr           1.4.0   2019-02-10 [1] CRAN (R 4.1.0)
-##  STutility       * 0.1.0   2022-04-19 [1] Github (jbergenstrahle/STUtility@ec8f3f5)
+##  STutility       * 0.1.0   2022-04-26 [1] local
 ##  survival          3.3-1   2022-03-03 [1] CRAN (R 4.1.2)
 ##  systemfonts       1.0.4   2022-02-11 [1] CRAN (R 4.1.2)
 ##  tensor            1.5     2012-05-05 [1] CRAN (R 4.1.3)
@@ -397,7 +397,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 
 ##  [1] /Users/ludviglarsson/anaconda3/envs/R4.1/lib/R/library
 ## 
-## ──────────────────────────────────────────────────────────────────────────────────────────────────</code></pre>
+## ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</code></pre>
 
 </div>
             </section>

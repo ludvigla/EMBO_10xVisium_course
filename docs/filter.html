@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -196,11 +197,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="filter" class="section level2 hasAnchor" number="4.3">
 <h2><span class="header-section-number">4.3</span> Filter<a href="filter.html#filter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Finally, let’s filter the data to remove spots with very high mitochondrial content. You can filter the data based on many different parameters, it’s up to you to test and decide what you think is best for the analysis you want to perform.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="filter.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep spots with less than 30% mitochondrial content</span></span>
-<span id="cb17-2"><a href="filter.html#cb17-2" aria-hidden="true" tabindex="-1"></a>se.subset <span class="ot">&lt;-</span> <span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> pct.mt <span class="sc">&lt;</span> <span class="dv">30</span>)</span>
-<span id="cb17-3"><a href="filter.html#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="filter.html#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Spots removed: &quot;</span>, <span class="fu">ncol</span>(se) <span class="sc">-</span> <span class="fu">ncol</span>(se.subset), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
-<pre><code>## Spots removed:  169</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="filter.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep spots with less than 30% mitochondrial content</span></span>
+<span id="cb19-2"><a href="filter.html#cb19-2" aria-hidden="true" tabindex="-1"></a>se.subset <span class="ot">&lt;-</span> <span class="fu">SubsetSTData</span>(se, <span class="at">expression =</span> pct.mt <span class="sc">&lt;</span> <span class="dv">40</span>)</span>
+<span id="cb19-3"><a href="filter.html#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="filter.html#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Spots removed: &quot;</span>, <span class="fu">ncol</span>(se) <span class="sc">-</span> <span class="fu">ncol</span>(se.subset), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<pre><code>## Spots removed:  14</code></pre>
 
 </div>
 <!-- </div> -->

@@ -12,7 +12,7 @@ In this particular example, we see that even though the QC metrics correlate wit
 
 col_scale <- c("darkblue", "cyan", "yellow", "red", "darkred")
 FeatureOverlay(se, features = c("nFeature_RNA", "nCount_RNA"), cols = col_scale, ncols = 2, 
-               pt.size = 1.3, label.by = "slide_id", sampleids = 1:2, value.scale = "all")
+               pt.size = 1.8, label.by = "slide_id", sampleids = 1:2, value.scale = "all")
 
 ```
   
@@ -62,9 +62,9 @@ se <- PercentageFeatureSet(se, pattern = "^mt-", col.name = "pct.mt")
 se <- PercentageFeatureSet(se, pattern = "^Rpl|^Rps-", col.name = "pct.ribo")
 
 col_samples <- c("#1954A6", "#A7C947")
-p1 <- ST.FeaturePlot(se, features = c("pct.mt"), cols = col_scale, ncol = 2, pt.size = 1.3, show.sb = FALSE, label.by = "slide_id")
+p1 <- ST.FeaturePlot(se, features = c("pct.mt"), cols = col_scale, ncol = 2, pt.size = 1.5, show.sb = FALSE, label.by = "slide_id")
 p2 <- VlnPlot(se, features = c("pct.mt"), group.by = "slide_id", cols = col_samples) & NoLegend()
-p3 <- ST.FeaturePlot(se, features = c("pct.ribo"), cols = col_scale, ncol = 2, pt.size = 1.3, show.sb = FALSE, label.by = "slide_id")
+p3 <- ST.FeaturePlot(se, features = c("pct.ribo"), cols = col_scale, ncol = 2, pt.size = 1.5, show.sb = FALSE, label.by = "slide_id")
 p4 <- VlnPlot(se, features = c("pct.ribo"), group.by = "slide_id", cols = col_samples) & NoLegend()
 
 (p1-p2) / (p3-p4) & patchwork::plot_layout(widths = c(2,1))
@@ -76,7 +76,7 @@ Finally, let's filter the data to remove spots with very high mitochondrial cont
   
 ```{r}
 # Keep spots with less than 30% mitochondrial content
-se.subset <- SubsetSTData(se, expression = pct.mt < 30)
+se.subset <- SubsetSTData(se, expression = pct.mt < 40)
 
 cat("Spots removed: ", ncol(se) - ncol(se.subset), "\n")
 ```

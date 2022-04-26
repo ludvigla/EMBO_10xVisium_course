@@ -156,8 +156,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="he-images.html"><a href="he-images.html"><i class="fa fa-check"></i><b>3</b> H&amp;E images</a>
 <ul>
 <li class="chapter" data-level="3.1" data-path="load-images.html"><a href="load-images.html"><i class="fa fa-check"></i><b>3.1</b> Load images</a></li>
-<li class="chapter" data-level="3.2" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.2</b> Mask images</a></li>
-<li class="chapter" data-level="3.3" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.3</b> Process images</a></li>
+<li class="chapter" data-level="3.2" data-path="crop-images.html"><a href="crop-images.html"><i class="fa fa-check"></i><b>3.2</b> Crop images</a></li>
+<li class="chapter" data-level="3.3" data-path="mask-images.html"><a href="mask-images.html"><i class="fa fa-check"></i><b>3.3</b> Mask images</a></li>
+<li class="chapter" data-level="3.4" data-path="process-images.html"><a href="process-images.html"><i class="fa fa-check"></i><b>3.4</b> Process images</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="quality-control-and-filtering.html"><a href="quality-control-and-filtering.html"><i class="fa fa-check"></i><b>4</b> Quality control and filtering</a>
 <ul>
@@ -198,8 +199,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In order to normalize the data we recommend using variance stabilized transformation available in the <code>SCTransform</code> function in Seurat as of v3.0.</p>
 <p>Since we have a known batch effect between the two sections, we will try to deal with that by specifying the batch in the <code>vars.to.regress</code> argument of the function. With more severe batch effects, you may need to integrate the two sections using a data integration method.</p>
 <p>Let’s see the effect of batch correction.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="normalization.html#cb19-1" aria-hidden="true" tabindex="-1"></a>se.norm <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(se.subset)</span>
-<span id="cb19-2"><a href="normalization.html#cb19-2" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(se.subset, <span class="at">vars.to.regress =</span> <span class="st">&quot;batch&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="normalization.html#cb21-1" aria-hidden="true" tabindex="-1"></a>se.norm <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(se.subset)</span>
+<span id="cb21-2"><a href="normalization.html#cb21-2" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(se.subset, <span class="at">vars.to.regress =</span> <span class="st">&quot;batch&quot;</span>)</span></code></pre></div>
 </div>
             </section>
 
