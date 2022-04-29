@@ -29,7 +29,7 @@ se <- CropImages(se, crop.geometry.list = crop.windows)
 
 ```
 
-```{r fig.width=12, fig.height=6, fig.cap="Raw H&E images", dpi=150}
+```{r fig.width=12, fig.height=6, fig.cap="Cfopped raw H&E images", dpi=150}
 
 ImagePlot(se, method = "raster", type = "raw", annotate = FALSE)
 

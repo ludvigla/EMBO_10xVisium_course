@@ -23,7 +23,7 @@
 <meta name="author" content="Authors: Lovisa Franzén, Ludvig Larsson, Mengxiao He" />
 
 
-<meta name="date" content="2022-04-26" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -199,23 +199,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We can use the harmonized PC vectors (integrated) as input for the clustering algorithm.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="clustering.html#cb30-1" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(<span class="at">object =</span> se.cor, <span class="at">verbose =</span> T, <span class="at">reduction =</span> <span class="st">&quot;harmony&quot;</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>)</span>
 <span id="cb30-2"><a href="clustering.html#cb30-2" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(se.cor)</span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="clustering.html#cb31-1" aria-hidden="true" tabindex="-1"></a>col_clusters <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">10</span>, <span class="at">name =</span> <span class="st">&quot;Set3&quot;</span>)</span>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="clustering.html#cb31-1" aria-hidden="true" tabindex="-1"></a>col_clusters <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">9</span>, <span class="at">name =</span> <span class="st">&quot;Set3&quot;</span>)</span>
 <span id="cb31-2"><a href="clustering.html#cb31-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ST.FeaturePlot</span>(se.cor, <span class="at">features =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">cols =</span> col_clusters, <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>, <span class="at">show.sb =</span> <span class="cn">FALSE</span>, <span class="at">pt.size =</span> <span class="fl">1.5</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Clusters&quot;</span>) <span class="sc">&amp;</span> <span class="fu">NoLegend</span>()</span>
 <span id="cb31-3"><a href="clustering.html#cb31-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(se.cor, <span class="at">reduction =</span> <span class="st">&quot;umap.harmony&quot;</span>, <span class="at">group.by =</span> <span class="st">&quot;seurat_clusters&quot;</span>, <span class="at">cols =</span> col_clusters) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;UMAP&quot;</span>)</span>
 <span id="cb31-4"><a href="clustering.html#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-5"><a href="clustering.html#cb31-5" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">-</span> p2 <span class="sc">+</span> patchwork<span class="sc">::</span><span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>))</span></code></pre></div>
-<p><img src="STUtility-analysis_files/figure-html/unnamed-chunk-31-1.png" width="1800" /></p>
+<p><img src="STUtility-analysis_files/figure-html/unnamed-chunk-29-1.png" width="1800" /></p>
 <p>It looks like the clusters corresponds pretty well with the different layers in the MOB tissue. If we’d like, we can make some annotations for these clusters and correlate them to the anatomical layers.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="clustering.html#cb32-1" aria-hidden="true" tabindex="-1"></a>cluster_annotations <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
 <span id="cb32-2"><a href="clustering.html#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L09&quot;</span>, <span class="co">#0</span></span>
 <span id="cb32-3"><a href="clustering.html#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L08&quot;</span>, <span class="co">#1 </span></span>
-<span id="cb32-4"><a href="clustering.html#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L02&quot;</span>, <span class="co">#2</span></span>
+<span id="cb32-4"><a href="clustering.html#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L05&quot;</span>, <span class="co">#2</span></span>
 <span id="cb32-5"><a href="clustering.html#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L03&quot;</span>, <span class="co">#3</span></span>
-<span id="cb32-6"><a href="clustering.html#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L05&quot;</span>, <span class="co">#4</span></span>
+<span id="cb32-6"><a href="clustering.html#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L02&quot;</span>, <span class="co">#4</span></span>
 <span id="cb32-7"><a href="clustering.html#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L04&quot;</span>, <span class="co">#5</span></span>
 <span id="cb32-8"><a href="clustering.html#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L06&quot;</span>, <span class="co">#6</span></span>
 <span id="cb32-9"><a href="clustering.html#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L07&quot;</span>, <span class="co">#7</span></span>
-<span id="cb32-10"><a href="clustering.html#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L01&quot;</span> <span class="co">#8</span></span>
+<span id="cb32-10"><a href="clustering.html#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;L01&quot;</span>  <span class="co">#8</span></span>
 <span id="cb32-11"><a href="clustering.html#cb32-11" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb32-12"><a href="clustering.html#cb32-12" aria-hidden="true" tabindex="-1"></a>se.cor<span class="sc">$</span>cluster_annotation <span class="ot">&lt;-</span> <span class="fu">factor</span>(plyr<span class="sc">::</span><span class="fu">mapvalues</span>(<span class="at">x =</span> <span class="fu">Idents</span>(se.cor), <span class="at">from =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">8</span>, <span class="at">to =</span> cluster_annotations), </span>
 <span id="cb32-13"><a href="clustering.html#cb32-13" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="fu">paste0</span>(<span class="st">&quot;L0&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>)))</span>
@@ -225,8 +225,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb32-17"><a href="clustering.html#cb32-17" aria-hidden="true" tabindex="-1"></a><span class="co"># p2 &lt;- DimPlot(se.cor, reduction = &quot;umap.harmony&quot;, group.by = &quot;cluster_annotation&quot;, cols = col_spectral) + labs(title=&quot;UMAP&quot;)</span></span>
 <span id="cb32-18"><a href="clustering.html#cb32-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-19"><a href="clustering.html#cb32-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ST.FeaturePlot</span>(se.cor, <span class="at">features =</span> <span class="st">&quot;cluster_annotation&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">cols =</span> col_spectral, <span class="at">show.sb =</span> F, <span class="at">dark.theme =</span> T, <span class="at">pt.size =</span> <span class="dv">2</span>, <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;&quot;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-32"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-32-1.png" alt="Spatial distribution of clusters" width="1800" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-30"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-30-1.png" alt="Spatial distribution of clusters" width="1800" />
 <p class="caption">
 Figure 5.5: Spatial distribution of clusters
 </p>

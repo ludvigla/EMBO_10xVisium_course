@@ -23,7 +23,7 @@
 <meta name="author" content="Authors: Lovisa Franzén, Ludvig Larsson, Mengxiao He" />
 
 
-<meta name="date" content="2022-04-26" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -200,10 +200,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="crop-images.html#cb11-1" aria-hidden="true" tabindex="-1"></a>crop.windows <span class="ot">&lt;-</span> <span class="fu">GetCropWindows</span>(<span class="at">object =</span> se, <span class="at">group.by =</span> <span class="st">&quot;slide_id&quot;</span>, <span class="at">xy_padding =</span> <span class="dv">70</span>)</span>
 <span id="cb11-2"><a href="crop-images.html#cb11-2" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">CropImages</span>(se, <span class="at">crop.geometry.list =</span> crop.windows)</span></code></pre></div>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="crop-images.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ImagePlot</span>(se, <span class="at">method =</span> <span class="st">&quot;raster&quot;</span>, <span class="at">type =</span> <span class="st">&quot;raw&quot;</span>, <span class="at">annotate =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-13"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-13-1.png" alt="Raw H&amp;E images" width="1800" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-11"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-11-1.png" alt="Cfopped raw H&amp;E images" width="1800" />
 <p class="caption">
-Figure 3.2: Raw H&amp;E images
+Figure 3.2: Cfopped raw H&amp;E images
 </p>
 </div>
 </div>

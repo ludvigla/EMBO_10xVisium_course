@@ -23,7 +23,7 @@
 <meta name="author" content="Authors: Lovisa Franzén, Ludvig Larsson, Mengxiao He" />
 
 
-<meta name="date" content="2022-04-26" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -200,8 +200,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We’ll use a neat trick here where we first run UMAP with 3 components, then we mix these three component values to produce an RGB color. This way we obtain a mixed color for each combination of UMAP components for each spot.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="spatial-color-projection.html#cb26-1" aria-hidden="true" tabindex="-1"></a>se.cor <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> se.cor, <span class="at">n.components =</span> <span class="dv">3</span>, <span class="at">reduction =</span> <span class="st">&quot;harmony&quot;</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction.name =</span> <span class="st">&quot;umap.3d&quot;</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="spatial-color-projection.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ST.DimPlot</span>(<span class="at">object =</span> se.cor, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">reduction =</span> <span class="st">&quot;umap.3d&quot;</span>, <span class="at">blend =</span> <span class="cn">TRUE</span>, <span class="at">dark.theme =</span> <span class="cn">TRUE</span>, <span class="at">pt.size =</span> <span class="fl">1.8</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-27"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-27-1.png" alt="Spatial color projection of a 3D UMAP" width="1800" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-25"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-25-1.png" alt="Spatial color projection of a 3D UMAP" width="1800" />
 <p class="caption">
 Figure 5.3: Spatial color projection of a 3D UMAP
 </p>

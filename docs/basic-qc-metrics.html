@@ -23,7 +23,7 @@
 <meta name="author" content="Authors: Lovisa Franzén, Ludvig Larsson, Mengxiao He" />
 
 
-<meta name="date" content="2022-04-26" />
+<meta name="date" content="2022-04-29" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -201,8 +201,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="basic-qc-metrics.html#cb16-1" aria-hidden="true" tabindex="-1"></a>col_scale <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;darkblue&quot;</span>, <span class="st">&quot;cyan&quot;</span>, <span class="st">&quot;yellow&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;darkred&quot;</span>)</span>
 <span id="cb16-2"><a href="basic-qc-metrics.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">FeatureOverlay</span>(se, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">&quot;nFeature_RNA&quot;</span>, <span class="st">&quot;nCount_RNA&quot;</span>), <span class="at">cols =</span> col_scale, <span class="at">ncols =</span> <span class="dv">2</span>, </span>
 <span id="cb16-3"><a href="basic-qc-metrics.html#cb16-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">pt.size =</span> <span class="fl">1.8</span>, <span class="at">label.by =</span> <span class="st">&quot;slide_id&quot;</span>, <span class="at">sampleids =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">value.scale =</span> <span class="st">&quot;all&quot;</span>)</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-17"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-17-1.png" alt="Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA = UMI count" width="1800" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-15"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-15-1.png" alt="Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA = UMI count" width="1800" />
 <p class="caption">
 Figure 4.1: Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA = UMI count
 </p>
@@ -238,8 +238,8 @@ Figure 4.1: Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA 
 <span id="cb17-27"><a href="basic-qc-metrics.html#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;D) Total spots per gene&quot;</span>)</span>
 <span id="cb17-28"><a href="basic-qc-metrics.html#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-29"><a href="basic-qc-metrics.html#cb17-29" aria-hidden="true" tabindex="-1"></a>(p1 <span class="sc">-</span> p2)<span class="sc">/</span>(p3 <span class="sc">-</span> p4) <span class="sc">&amp;</span> <span class="fu">theme_linedraw</span>()</span></code></pre></div>
-<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-18"></span>
-<img src="STUtility-analysis_files/figure-html/unnamed-chunk-18-1.png" alt="Visualization of basic QC metrics. A) Histogram of unique genes per spot. B) Histogram of total UMI counts per spot. C) Total counts per gene in log10-scale. This is useful to inspect if you need to filter out lowly expressed genes from your data set. D) Total spots per gene. Here we can clearly see a substantial gene dropout in the low quality data set." width="1800" />
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="STUtility-analysis_files/figure-html/unnamed-chunk-16-1.png" alt="Visualization of basic QC metrics. A) Histogram of unique genes per spot. B) Histogram of total UMI counts per spot. C) Total counts per gene in log10-scale. This is useful to inspect if you need to filter out lowly expressed genes from your data set. D) Total spots per gene. Here we can clearly see a substantial gene dropout in the low quality data set." width="1800" />
 <p class="caption">
 Figure 4.2: Visualization of basic QC metrics. A) Histogram of unique genes per spot. B) Histogram of total UMI counts per spot. C) Total counts per gene in log10-scale. This is useful to inspect if you need to filter out lowly expressed genes from your data set. D) Total spots per gene. Here we can clearly see a substantial gene dropout in the low quality data set.
 </p>
