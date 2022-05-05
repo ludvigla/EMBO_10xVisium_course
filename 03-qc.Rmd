@@ -8,11 +8,11 @@ Plotting the spatial distribution of a certain QC metrics is often very useful. 
 
 In this particular example, we see that even though the QC metrics correlate with cell density, there is a strong batch effect between the two sections where the second tissue section has much lower overall quality.
 
-```{r fig.width=12, fig.height=12, fig.cap="Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA = UMI count", dpi=150}
+```{r fig.width=12, fig.height=11, fig.cap="Spatial QC metrics overlay. nFeature_RNA = unique genes; nCount_RNA = UMI count", dpi=150}
 
 col_scale <- c("darkblue", "cyan", "yellow", "red", "darkred")
 FeatureOverlay(se, features = c("nFeature_RNA", "nCount_RNA"), cols = col_scale, ncols = 2, 
-               pt.size = 1.8, label.by = "slide_id", sampleids = 1:2, value.scale = "all")
+               pt.size = 2.2, label.by = "slide_id", sampleids = 1:2, value.scale = "all")
 
 ```
   
@@ -75,7 +75,7 @@ p4 <- VlnPlot(se, features = c("pct.ribo"), group.by = "slide_id", cols = col_sa
 Finally, let's filter the data to remove spots with very high mitochondrial content. You can filter the data based on many different parameters, it's up to you to test and decide what you think is best for the analysis you want to perform.  
   
 ```{r}
-# Keep spots with less than 30% mitochondrial content
+# Keep spots with less than 40% mitochondrial content
 se.subset <- SubsetSTData(se, expression = pct.mt < 40)
 
 cat("Spots removed: ", ncol(se) - ncol(se.subset), "\n")
